@@ -10,7 +10,7 @@
 	<munit:config name="deleteclient-management-process-api-test-suite.xml" />
 	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-recordNotFound" doc:id="9f4b7929-80bc-4909-ab76-a2be6d57c508" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="70d1eb20-ecb4-4b46-a64a-33464d6500f5" processor="file:read">
+			<munit-tools:mock-when doc:name="Mock file read" doc:id="70d1eb20-ecb4-4b46-a64a-33464d6500f5" processor="file:read">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
@@ -31,19 +31,19 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="42f01680-e1aa-4059-ab1b-86b9489850dd" message="Munit payload: #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="8e7ac643-03af-4970-9acd-76b22a6189a9" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8e7ac643-03af-4970-9acd-76b22a6189a9" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-LastRecord" doc:id="e2eba458-f88e-4be7-a1f7-f0e0d03686c8" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="658e7ca5-e51a-4d4f-8e83-9a47777733e6" processor="file:delete">
+			<munit-tools:mock-when doc:name="Mock file delete" doc:id="658e7ca5-e51a-4d4f-8e83-9a47777733e6" processor="file:delete">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Delete file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="620d9666-98e4-48db-8bbe-2d8b91d76baf" attributeName="doc:id" />
 					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
 				</munit-tools:with-attributes>
 			</munit-tools:mock-when>
-			<munit-tools:mock-when doc:name="Mock when" doc:id="effaa5a1-6d59-4288-8af5-ba0a8c86ee03" processor="file:read">
+			<munit-tools:mock-when doc:name="Mock file read" doc:id="effaa5a1-6d59-4288-8af5-ba0a8c86ee03" processor="file:read">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
@@ -64,19 +64,19 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="6dcda65a-6bf1-4648-8d58-28a12c70318d" message="Munit payload: #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="b195455b-f794-49e1-8b05-42c785f83aa4" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b195455b-f794-49e1-8b05-42c785f83aa4" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-deleteRecord" doc:id="7e26939a-44e1-4eaa-a6ce-58f98b05dfaa" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="824dee42-3c80-4e7f-954f-f9cea2132fc3" processor="file:write">
+			<munit-tools:mock-when doc:name="Mock file write" doc:id="824dee42-3c80-4e7f-954f-f9cea2132fc3" processor="file:write">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Write in file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="c232b11a-cdef-4879-9e86-d11ce0249bf9" attributeName="doc:id" />
 					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
 				</munit-tools:with-attributes>
 			</munit-tools:mock-when>
-			<munit-tools:mock-when doc:name="Mock when" doc:id="f6ce7690-f32d-4cb2-9c62-adee0701d937" processor="file:read">
+			<munit-tools:mock-when doc:name="Mock file read" doc:id="f6ce7690-f32d-4cb2-9c62-adee0701d937" processor="file:read">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
@@ -97,13 +97,13 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="b0799e88-302f-41c7-b98c-11fa54b6cfeb" message="Munit payload: #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="8c23ad93-7620-44f2-a763-bae323da20c6" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8c23ad93-7620-44f2-a763-bae323da20c6" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
 	
 	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-Exception-404" doc:id="193beb9f-47e7-4cc6-8f1d-b85776d4a4b4" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="3f574727-1303-4991-b307-2b4116c8236d" processor="file:read">
+			<munit-tools:mock-when doc:name="Mock read" doc:id="3f574727-1303-4991-b307-2b4116c8236d" processor="file:read">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
@@ -133,7 +133,7 @@
 	
 	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-Exception-500" doc:id="aad744d1-cf53-421e-a172-b26cd31f4012" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="7d2ef2bc-f439-40cf-a08a-2a095b64e17e" processor="file:read">
+			<munit-tools:mock-when doc:name="Mock read" doc:id="7d2ef2bc-f439-40cf-a08a-2a095b64e17e" processor="file:read">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
 					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />

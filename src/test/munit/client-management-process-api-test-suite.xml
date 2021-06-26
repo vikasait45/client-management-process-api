@@ -15,7 +15,7 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="e322efe4-d15e-451a-87a6-67637f1b5eaf" message="payload is : #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="67892fc9-8604-4ce6-adc1-2904e4203976" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="67892fc9-8604-4ce6-adc1-2904e4203976" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
 

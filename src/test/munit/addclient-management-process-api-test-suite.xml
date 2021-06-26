@@ -10,17 +10,6 @@
 	<munit:config name="addclient-management-process-api-test-suite.xml" />
 	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-FileNotPresent" doc:id="4a5f727f-e309-4e69-a717-d40929e4b6be" description="Test">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="d4c268d1-4fa0-4b75-9200-e2ae7380ac65" processor="set-variable">
-				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="Set Variable errorDesc" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="3a64aa2e-f655-4ebc-b683-87b61b3e630d" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return >
-					<munit-tools:variables >
-						<munit-tools:variable key="errorDesc" value='#["Error occured in flow"]' />
-					</munit-tools:variables>
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
 			<munit-tools:mock-when doc:name="Mock filepath" doc:id="11c94ada-34aa-4f4b-952b-550609d9289f" processor="set-variable">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Set Variable filePath" attributeName="doc:name" />
@@ -52,11 +41,22 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="c0265a8f-9ea2-4e99-a1bb-dc2d57dbd829" message="payload in Munit : #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="94ad1740-2a7f-43ac-8d72-0add864b5f7b" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="94ad1740-2a7f-43ac-8d72-0add864b5f7b" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="Payload is null"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-FilePresent" doc:id="097130a0-9a1e-4207-b5c8-91acdd8d2d28" description="Test">
 		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock FilePath" doc:id="2b81fbd4-fb14-4a48-8fe0-1b247869f743" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Set Variable filePath" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="77c592b1-d2a7-444a-b91a-52a99e9cdf3a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="filePath" value='#["C:/gitProject/client-management-process-api/src/test/resources/getClientMock.json"]' />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
 			<munit-tools:mock-when doc:name="Mock File write operation" doc:id="9cad53e4-6ac3-488a-b898-f1c8264498a4" processor="file:write">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="Write file" attributeName="doc:name" />
@@ -77,7 +77,7 @@
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="ab0b0eb2-0c30-416c-86a9-c567176bb9ec" message="payload in Munit : #[payload]"/>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="22f5ff90-c8a0-4e7b-80c0-b93c699a1abf" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="22f5ff90-c8a0-4e7b-80c0-b93c699a1abf" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-Exception" doc:id="2fd991e5-c769-4333-8e45-b9b81c88b98f" description="Test">
