@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+<file:config name="Client_File_Config" doc:name="File Config" doc:id="9e995dc8-169b-47c4-b593-b6e2e2e2e2f4" />
+	<flow name="post:\clients:application\json:client-management-process-api-config">
+		<logger level="INFO" doc:name="Logger" doc:id="815991ad-ba00-46f8-be24-a64fe3a7792c" message="Start of create client flow"/>
+		<set-variable value="${base.path}${folder.location}${file.location}" doc:name="Set Variable filePath" doc:id="77c592b1-d2a7-444a-b91a-52a99e9cdf3a" variableName="filePath"/>
+		<ee:transform doc:name="Transform Message to check whether file is present or not" doc:id="13d9a194-fcce-42a6-a08a-f94bf7d1eb69" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="fileIndicator" ><![CDATA[%dw 2.0
+import java!com::client::checkFile
+output application/java
+---
+checkFile::isPresent(vars.filePath)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<set-variable value="#[randomInt(50000)]" doc:name="Set Variable clientKey" doc:id="d1ca955c-9b0e-43f3-bfb7-50f60026c39a" variableName="clientKey"/>
+		<logger level="INFO" doc:name="Logger" doc:id="178ad3c8-4861-408c-83f0-66e5fab601ce" message="File present indicator : #[vars.fileIndicator]"/>
+		<choice doc:name="Choice" doc:id="fbe1adfd-0f44-4a91-9c60-f3036cf862e7" >
+			<when expression="vars.fileIndicator">
+				<logger level="INFO" doc:name="Logger" doc:id="bb5e1193-bc15-45cb-8851-7d2cd8edfe99" message="Existing file"/>
+				<ee:transform doc:name="Transform Message" doc:id="ded0c4dd-54b7-4863-b96c-5ca1c4ec89da" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::util::Timer
+output application/csv header=false
+---
+{
+   "Client Key": vars.clientKey, 
+   "First Name": payload.'First Name',
+   "Middle Name": payload.'Middle Name',
+   "Last Name": payload.'Last Name',
+   "BirthDate": toMilliseconds((payload.'BirthDate' ++" 00:00:00.000") as LocalDateTime {format: "dd-MM-yyyy HH:mm:ss.SSS"}),
+   "Height":payload.Height,
+   "Weight":payload.Weight,
+   "Billing Street":payload.'Billing Street',
+   "Billing City":payload.'Billing City',
+   "Billing State":payload.'Billing State',
+   "Billing Postal Code":payload.'Billing Postal Code',
+   "Billing Country":payload.'Billing Country',
+   "Created Date" : currentMilliseconds()
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="9c4a594d-8b5d-4a48-acd2-7fdb4ccb62bd" message="New file"/>
+				<ee:transform doc:name="Transform Message" doc:id="59c5bf96-20c3-4608-8535-644ab16e13b2">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::util::Timer
+output application/csv header=true
+---
+{
+   "Client Key": vars.clientKey, 
+   "First Name": payload.'First Name',
+   "Middle Name": payload.'Middle Name',
+   "Last Name": payload.'Last Name',
+   "BirthDate": toMilliseconds((payload.'BirthDate' ++" 00:00:00.000") as LocalDateTime {format: "dd-MM-yyyy HH:mm:ss.SSS"}),
+   "Height":payload.Height,
+   "Weight":payload.Weight,
+   "Billing Street":payload.'Billing Street',
+   "Billing City":payload.'Billing City',
+   "Billing State":payload.'Billing State',
+   "Billing Postal Code":payload.'Billing Postal Code',
+   "Billing Country":payload.'Billing Country',
+   "Created Date" : currentMilliseconds()
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</otherwise>
+		</choice>
+		<file:write doc:name="Write file" doc:id="7c0e1468-6f9e-43d0-ae46-b6c521e53c1d" config-ref="Client_File_Config" path="#[vars.filePath]" mode="APPEND"/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "Client Key": vars.clientKey
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<set-variable value="201" doc:name="Set Variable" doc:id="f091789f-8002-4db3-b32f-c9170d875a27" variableName="httpStatus"/>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="cdb526f6-3841-4f39-950b-a9cc88dc2d60" type="ANY">
+				<logger level="ERROR" doc:name="Logger" doc:id="8e12b415-ff58-4044-9f6b-1e4956c33fe4" message="For all exception"/>
+				<set-variable value="500" doc:name="Set Variable" doc:id="83214a4a-8667-462e-a310-a8f4673d37a0" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="62aef985-f71f-423b-b239-22285f00dd84" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 500,
+	errorDesc: error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+    
+</flow>	
+</mule>

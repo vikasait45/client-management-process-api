@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<flow name="get:\clients:client-management-process-api-config">
+        <logger level="INFO" doc:name="Logger" doc:id="b1b640d2-8876-42fa-bbbc-486bed18b79f" message="Start of get clients information flow"/>
+		<set-variable value="${base.path}${folder.location}${file.location}" doc:name="Set Variable filePath" doc:id="52671f5b-ce87-4804-9863-0639c3733390" variableName="filePath"/>
+		<file:read doc:name="Read" doc:id="4587f09e-5ee2-496f-9672-d6fc8c161c96" config-ref="Client_File_Config" path="#[vars.filePath]"/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+"clientDetails" :payload map (value,index)->
+ {  "Client Key" : value.'Client Key' ,
+	"First Name": value.'First Name',
+      "Middle Name": value.'Middle Name',
+      "Last Name": value.'Last Name',
+      "BirthDate": (value.BirthDate as Number / 1000) as DateTime as String {format:"dd.MM.yyyy"},
+      "Height": value.Height,
+      "Weight": value.Weight,
+      "Billing Address": value.'Billing Street' ++ value.'Billing City' ++ value.'Billing State' ++ value.'Billing Postal Code' ++ value.'Billing Country',
+      "Created Date": (value.'Created Date' as Number / 1000) as DateTime as String {format:"dd.MM.yyyy"}
+ },
+ "client count" : sizeOf(payload),
+ }]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="660c2d10-8bd2-464b-9cf2-c9f888b35c2e" type="FILE:ILLEGAL_PATH">
+				<logger level="ERROR" doc:name="Logger" doc:id="4b1be598-ae0c-4502-ad2b-0badb057502a" message="file path error"/>
+				<set-variable value="404" doc:name="Set Variable" doc:id="fc9cb160-ae9d-4be9-9b8a-94a6306bb68e" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="5840bc1e-5704-4b88-9c25-8ad6d72c64bc" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 404,
+	errorDesc: "File not found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="771bd2b5-b47e-4e68-97d7-029346a3f3fc" type="ANY">
+				<logger level="ERROR" doc:name="Logger" doc:id="2fd2cb20-4600-47ff-8ae5-e3d4fa4155e7" message="All other errors"/>
+				<set-variable value="500" doc:name="Set Variable" doc:id="76887c5a-fe4c-43b4-9221-28f8ad73a836" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="93d8d861-59f7-47aa-aaed-2e752015b326" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 500,
+	errorDesc: error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+    
+</flow>	
+
+</mule>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<flow name="delete:\clients:client-management-process-api-config">
+        <logger level="INFO" doc:name="Logger" doc:id="517138be-5160-44ea-9e2f-9ce820ef313f" message="Start of delete client flow"/>
+		<set-variable value="${base.path}${folder.location}${file.location}" doc:name="Set Variable filePath" doc:id="846a3bfb-a77e-4a57-a309-1050b9bcdec3" variableName="filePath"/>
+		<set-variable value="#[message.attributes.queryParams.'clientKey']" doc:name="Set Variable clientKey" doc:id="fd42dad4-369b-4ec4-935d-f9733ce9aa77" variableName="clientKey"/>
+		<file:read doc:name="Read all records from file" doc:id="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" config-ref="Client_File_Config" path="#[vars.filePath]"/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Transform Message to filter records">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/csv header=true
+---
+payload filter $.'Client Key' != vars.clientKey]]></ee:set-payload>
+            </ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="fileSize" ><![CDATA[%dw 2.0
+output application/java
+---
+sizeOf(payload)]]></ee:set-variable>
+			</ee:variables>
+        
+</ee:transform>
+		<ee:transform doc:name="Transform Message to calculate size" doc:id="2e129951-9288-4b5a-8bee-962f2a794a13" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="filteredFileSize" ><![CDATA[%dw 2.0
+output application/java
+---
+sizeOf(payload)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0fa7e25d-8303-434d-825b-4c7cd33498d6" message="filesize : #[vars.fileSize]   filtered size: #[vars.filteredFileSize]" />
+		<choice doc:name="Choice" doc:id="b9690ee6-e5c3-4675-bf85-65151fff15a9" >
+			<when expression="#[vars.fileSize == vars.filteredFileSize]">
+				<logger level="ERROR" doc:name="Logger" doc:id="1814f1bc-c625-48fd-ba8a-39d9cc86513b" message="No record with client key: #[vars.clientKey]"/>
+				<set-variable value="404" doc:name="Set Variable" doc:id="2e74f8a6-60df-4e10-90f2-d415b8a444e6" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="784d0515-fcec-4a16-baad-57f967065010" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 404,
+	errorDesc: "There is no client with clientKey: "++ vars.clientKey
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression="#[vars.filteredFileSize == 0]">
+				<logger level="INFO" doc:name="Logger" doc:id="f610b5c4-d1e6-4f6c-916e-c0d38f7a3f68" message="There is no record left so deleting the file. "/>
+				<file:delete doc:name="Delete file" doc:id="620d9666-98e4-48db-8bbe-2d8b91d76baf" config-ref="Client_File_Config" path="#[vars.filePath]"/>
+				<ee:transform doc:name="Transform Message" doc:id="4af43087-afe6-41f4-8432-89045399a87c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Successfully deleted client with clientKey: " ++ vars.clientKey
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="b0f2411b-0d08-4dce-b5cb-094d23e3da71" message="Updating file with filtered record"/>
+				<file:write doc:name="Write in file" doc:id="c232b11a-cdef-4879-9e86-d11ce0249bf9" config-ref="Client_File_Config" path="#[vars.filePath]" />
+				<ee:transform doc:name="Transform Message" doc:id="d639ac39-9d7e-441e-9e67-7c71d482daa4" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Successfully deleted client with clientKey: " ++ vars.clientKey
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="798045f7-07f2-4a63-87e1-4b5cd238871e" type="FILE:ILLEGAL_PATH">
+				<logger level="ERROR" doc:name="Logger" doc:id="0ecae5a5-6927-4e34-a5ec-716905a353e2" message="File not found exception"/>
+				<set-variable value="404" doc:name="Set Variable" doc:id="c252e736-84f4-46dd-8f35-b86e2e4951b9" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="3ac3ddf3-bc2a-430e-b172-a0d45f26de4f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 404,
+	errorDesc: "File not found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bcff937b-bc72-442f-92e6-0e4982d2d30a" type="ANY">
+				<logger level="ERROR" doc:name="Logger" doc:id="b222aaa5-9635-4956-994b-38d3012279eb" message="All other exception"/>
+				<set-variable value="500" doc:name="Set Variable" doc:id="8947484d-8dd2-4ec6-912e-99d478374409" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="216e9d74-4de3-40df-ac1a-f79e801930f5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: 500,
+	errorDesc: error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+    
+</flow>	
+</mule>
