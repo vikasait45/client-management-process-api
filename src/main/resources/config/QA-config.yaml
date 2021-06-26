@@ -1,0 +1,13 @@
+https:
+  port : "9031"
+  password : "![74qChRwe5du2zY32tTVtJg==]"
+
+
+file:
+  location: "/Customers-QA.csv"
+  
+folder:
+  location: "/QA"
+  
+base:
+  path: "C:/Users/v2cloud/AnypointStudio/studio-workspace/client-management-process-api/src/main/resources"

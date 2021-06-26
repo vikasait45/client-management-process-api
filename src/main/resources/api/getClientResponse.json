@@ -1,0 +1,15 @@
+{
+   "clientDetails":[
+      {
+         "First Name":"Vikas",
+         "Middle Name":"",
+         "Last Name":"Choudhary",
+         "BirthDate":"17.03.1990",
+         "Height":"6",
+         "Weight":"90",
+         "Billing Address":"India",
+         "Created Date":"17.03.1990"
+      }
+   ],
+   "client count":5
+}

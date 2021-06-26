@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="incomingrequest" format="json">
+      <types:shape format="weave" example="api/createClientRequest.json"><![CDATA[%dw 2.0
+
+type incomingrequest = {|
+  "First Name": String, 
+  "Middle Name": String, 
+  "Last Name": String, 
+  BirthDate: String, 
+  Height: String, 
+  Weight: String, 
+  "Billing Street": String, 
+  "Billing City": String, 
+  "Billing State": String, 
+  "Billing Postal Code": String, 
+  "Billing Country,": String
+|} {"example": "{\\\"First Name\\\":\\\"Vikas\\\",\\\"Middle Name\\\":\\\" \\\",\\\"Last Name\\\":\\\"Choudhary\\\",\\\"BirthDate\\\":\\\"17-03-1990\\\",\\\"Height\\\":\\\"6\\\",\\\"Weight\\\":\\\"90\\\",\\\"Billing Street\\\":\\\"plot no 31\\\",\\\"Billing City\\\":\\\"Jaipur\\\",\\\"Billing State\\\":\\\"Rajasthan\\\",\\\"Billing Postal Code\\\":\\\"302012\\\",\\\"Billing Country,\\\":\\\"India\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#13d9a194-fcce-42a6-a08a-f94bf7d1eb69"/>
+  <types:enrichment select="#ded0c4dd-54b7-4863-b96c-5ca1c4ec89da">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="incomingrequest"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#2e129951-9288-4b5a-8bee-962f2a794a13"/>
+</types:mule>

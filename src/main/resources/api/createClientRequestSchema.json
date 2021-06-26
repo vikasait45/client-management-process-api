@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "First Name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z]*$"
+    },
+    "Middle Name": {
+      "type": "string"
+    },
+    "Last Name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z]*$"
+    },
+    "BirthDate": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 10,
+      "pattern":"^([0]?[1-9]|[1|2][0-9]|[3][0|1])[-]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2})$"
+    },
+    "Height": {
+      "type": "string"
+    },
+    "Weight": {
+      "type": "string"
+    },
+    "Billing Street": {
+      "type": "string"
+    },
+    "Billing City": {
+      "type": "string"
+    },
+    "Billing State": {
+      "type": "string"
+    },
+    "Billing Postal Code": {
+      "type": "string"
+    },
+    "Billing Country,": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "First Name",
+    "Last Name",
+    "BirthDate"
+  ]
+}

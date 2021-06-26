@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="client-management-process-api-test-suite.xml"/>
+	<munit:test name="client-management-process-api-test-suite-get:\healthChecks:client-management-process-api-configTest" doc:id="c5b9d2a4-5f6b-41b1-a75a-c5fb8ae8d3c4" description="Test">
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="8c41ca16-2b60-46d7-a2b2-5c31a60e01ec" message="Start of munit"/>
+			<flow-ref doc:name="Flow-ref to get:\healthChecks:client-management-process-api-config" doc:id="1ec0e1ee-c0b0-48f9-a227-38dce6a1f3e8" name="get:\healthChecks:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="e322efe4-d15e-451a-87a6-67637f1b5eaf" message="payload is : #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="67892fc9-8604-4ce6-adc1-2904e4203976" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

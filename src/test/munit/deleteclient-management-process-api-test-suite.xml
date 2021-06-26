@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="deleteclient-management-process-api-test-suite.xml" />
+	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-recordNotFound" doc:id="9f4b7929-80bc-4909-ab76-a2be6d57c508" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="70d1eb20-ecb4-4b46-a64a-33464d6500f5" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="1b3736d2-e2d0-4974-8faa-493da9e0e456" message="Munit Start for delete flow : record not found"/>
+			<munit:set-event doc:name="Set Event" doc:id="513ab3a0-87d6-43b3-9e24-81339c1dfea1" >
+				<munit:attributes value="#[{queryParams: {'clientKey':'4567'}}]" />
+
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\clients:client-management-process-api-config" doc:id="1dee60b9-c6e7-48e1-876a-e862ebea8f4a" name="delete:\clients:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="42f01680-e1aa-4059-ab1b-86b9489850dd" message="Munit payload: #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8e7ac643-03af-4970-9acd-76b22a6189a9" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-LastRecord" doc:id="e2eba458-f88e-4be7-a1f7-f0e0d03686c8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="658e7ca5-e51a-4d4f-8e83-9a47777733e6" processor="file:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Delete file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="620d9666-98e4-48db-8bbe-2d8b91d76baf" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="effaa5a1-6d59-4288-8af5-ba0a8c86ee03" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="5a511aaf-a856-4429-b83d-7092d1ec7646" message="Munit Start for delete flow : Last record"/>
+			<munit:set-event doc:name="Set Event" doc:id="2bb2a68a-c828-4c07-b8b5-6d5696c64667" >
+				<munit:attributes value="#[{queryParams: {'clientKey':'12345'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\clients:client-management-process-api-config" doc:id="ecfd9731-1381-4292-9544-220002093004" name="delete:\clients:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="6dcda65a-6bf1-4648-8d58-28a12c70318d" message="Munit payload: #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b195455b-f794-49e1-8b05-42c785f83aa4" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-deleteRecord" doc:id="7e26939a-44e1-4eaa-a6ce-58f98b05dfaa" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="824dee42-3c80-4e7f-954f-f9cea2132fc3" processor="file:write">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write in file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c232b11a-cdef-4879-9e86-d11ce0249bf9" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="f6ce7690-f32d-4cb2-9c62-adee0701d937" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('deleteClientMock.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="aad2fed3-e373-460b-990a-249e4c2a9f4a" message="Munit Start for delete flow : not last record"/>
+			<munit:set-event doc:name="Set Event" doc:id="4aafb763-2019-4429-89f0-ec42bbde88e8" >
+				<munit:attributes value="#[{queryParams: {'clientKey':'12345'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\clients:client-management-process-api-config" doc:id="21b6fbab-d955-4d99-ab80-b30a3c6ee781" name="delete:\clients:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="b0799e88-302f-41c7-b98c-11fa54b6cfeb" message="Munit payload: #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8c23ad93-7620-44f2-a763-bae323da20c6" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-Exception-404" doc:id="193beb9f-47e7-4cc6-8f1d-b85776d4a4b4" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3f574727-1303-4991-b307-2b4116c8236d" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+					<munit-tools:error typeId='#["FILE:ILLEGAL_PATH"]' />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="78d28260-4833-440b-8f35-34802bd73507" message="Munit Start for delete flow : exception 404"/>
+			<munit:set-event doc:name="Set Event" doc:id="6519db8b-b5d3-474a-92ee-c37f330a2421" >
+				<munit:attributes value="#[{queryParams: {'clientKey':'4567'}}]" />
+
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\clients:client-management-process-api-config" doc:id="9261caab-a90c-47b5-9067-c7a7cbf73a9c" name="delete:\clients:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="5da05406-b200-49e9-b0a7-0bde48f6bbd5" message="Munit payload: #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="e98d3f8a-4e26-4f61-b710-5b7ea446d7ed" actual="#[payload.errorCode]" expected="#[404]" message="ErrorCode is not 404"/>
+		
+</munit:validation>
+	</munit:test>
+	
+	<munit:test name="deleteclient-management-process-api-test-suite-delete:\clients:client-management-process-api-configTest-Exception-500" doc:id="aad744d1-cf53-421e-a172-b26cd31f4012" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7d2ef2bc-f439-40cf-a08a-2a095b64e17e" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read all records from file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2bd5da21-0cbc-428a-a7a9-68181bf8cb74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+					<munit-tools:error typeId='#["ANY"]' />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="0d2e0ba9-b9e4-42f2-8231-fa24190896f6" message="Munit Start for delete flow : exception 500"/>
+			<munit:set-event doc:name="Set Event" doc:id="ac6b39d8-db1a-4a7e-b709-fc0a0cddf06e" >
+				<munit:attributes value="#[{queryParams: {'clientKey':'4567'}}]" />
+
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\clients:client-management-process-api-config" doc:id="355c921c-55fb-49ea-b837-dd0f63d208d0" name="delete:\clients:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="4f05b57d-d072-43f1-97a5-69cb22efd724" message="Munit payload: #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="4bc3b523-ece2-49d1-969b-43e9e5819d8d" actual="#[payload.errorCode]" expected="#[500]" message="ErrorCode is not 404"/>
+		
+</munit:validation>
+	</munit:test>
+
+
+</mule>

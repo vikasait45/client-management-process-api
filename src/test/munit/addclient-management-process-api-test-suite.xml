@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="addclient-management-process-api-test-suite.xml" />
+	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-FileNotPresent" doc:id="4a5f727f-e309-4e69-a717-d40929e4b6be" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="d4c268d1-4fa0-4b75-9200-e2ae7380ac65" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Set Variable errorDesc" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="3a64aa2e-f655-4ebc-b683-87b61b3e630d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="errorDesc" value='#["Error occured in flow"]' />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock filepath" doc:id="11c94ada-34aa-4f4b-952b-550609d9289f" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Set Variable filePath" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="77c592b1-d2a7-444a-b91a-52a99e9cdf3a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="filePath" value='#["random"]' />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock File write operation" doc:id="fd341155-ddf9-4800-be1a-1c003c4e835a" processor="file:write">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7c0e1468-6f9e-43d0-ae46-b6c521e53c1d" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="58663b38-bf27-416e-bbb3-61f20b7a6d58" >
+				<munit:payload value="#[MunitTools::getResourceAsString('createClientMock.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<logger level="INFO" doc:name="Logger" doc:id="ec31a035-f228-4c9b-9a5a-9c22b93be97d" message="Munit for add client flow"/>
+			<flow-ref doc:name="Flow-ref to post:\clients:application\json:client-management-process-api-config" doc:id="d832b36e-487e-41dd-89c6-4c27274d9b4e" name="post:\clients:application\json:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="c0265a8f-9ea2-4e99-a1bb-dc2d57dbd829" message="payload in Munit : #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="94ad1740-2a7f-43ac-8d72-0add864b5f7b" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-FilePresent" doc:id="097130a0-9a1e-4207-b5c8-91acdd8d2d28" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock File write operation" doc:id="9cad53e4-6ac3-488a-b898-f1c8264498a4" processor="file:write">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7c0e1468-6f9e-43d0-ae46-b6c521e53c1d" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="92069845-729f-449f-972b-00c5ad6ed00c" >
+				<munit:payload value="#[MunitTools::getResourceAsString('createClientMock.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<logger level="INFO" doc:name="Logger" doc:id="49f74339-f551-49ba-8554-60215000e6dc" message="Munit for add client success flow"/>
+			<flow-ref doc:name="Flow-ref to post:\clients:application\json:client-management-process-api-config" doc:id="267033b7-2bbf-4551-b7f5-f7c37ad4894d" name="post:\clients:application\json:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="ab0b0eb2-0c30-416c-86a9-c567176bb9ec" message="payload in Munit : #[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="22f5ff90-c8a0-4e7b-80c0-b93c699a1abf" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="addclient-management-process-api-test-suite-post:\clients:application\json:client-management-process-api-configTest-Exception" doc:id="2fd991e5-c769-4333-8e45-b9b81c88b98f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock File write operation" doc:id="e5a225af-188f-4711-8afa-306c23cbf30e" processor="file:write">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write file" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7c0e1468-6f9e-43d0-ae46-b6c521e53c1d" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Client_File_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getClientMock.json')]" mediaType="application/json" />
+					<munit-tools:error typeId='#["ANY"]' />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="dbfe3a33-4bc4-427c-b8fd-0c0f9ac2faee" >
+				<munit:payload value="#[MunitTools::getResourceAsString('createClientMock.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<logger level="INFO" doc:name="Logger" doc:id="aaff4823-ce1b-48ab-b58b-1d441ddb50a2" message="Munit for add client exception flow"/>
+			<flow-ref doc:name="Flow-ref to post:\clients:application\json:client-management-process-api-config" doc:id="55da9116-c89a-45ba-af59-a88e99821b5c" name="post:\clients:application\json:client-management-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="55c37ea4-fa37-43e6-a281-8dfce3888cc7" message="payload in Munit : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="fded5ff9-bbd4-4f37-b338-622903b217a0" actual="#[payload.errorCode]" expected="#[500]" message="ErrorCode is not 500"/>
+		
+</munit:validation>
+	</munit:test>
+
+
+</mule>

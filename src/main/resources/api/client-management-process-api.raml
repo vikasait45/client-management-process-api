@@ -1,0 +1,93 @@
+#%RAML 1.0
+title: client-management-process-api
+version: 1
+/healthChecks:
+  get:
+    description: This API endpoint will do the heathcheck of application. 
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {"heathCheck":"success"}
+
+      500:
+         body:
+          application/json:
+            example:
+              {"heathCheck":"Failure"} 
+
+/clients:
+  post:
+    description: This API is going to receive a new client inside a JSON body and will create this a new client record in the CSV file.
+    body:
+        application/json:
+          example: !include createClientRequest.json
+          type: !include createClientRequestSchema.json
+    responses:
+        200:
+          body:
+            application/json:
+              example: !include createClientResponse.json
+        400:
+         body:
+           application/json:
+             example: !include errorResponse-400.json
+        404:
+         body:
+           application/json:
+             example: !include errorResponse-404.json
+        500:
+         body:
+           application/json:
+             example: !include errorResponse-500.json 
+
+  get:
+    description: This endpoint is use to get all clients information from CSV file.
+    responses:
+        200:
+         body:
+           application/json:
+             example: !include getClientResponse.json
+        400:
+         body:
+           application/json:
+             example: !include errorResponse-400.json
+        404:
+         body:
+           application/json:
+             example: !include errorResponse-404.json
+        500:
+         body:
+           application/json:
+             example: !include errorResponse-500.json      
+            
+  delete:
+    description: This endpoint is use to delete client information from CSV file based on client key.
+    queryParameters:
+      clientKey:
+        description: "clientKey"
+        type: integer
+        example: 34567
+        required: true
+    responses:
+        200:
+         body:
+           application/json:
+             example: 
+              {"message": "Successfully deleted client with cleint key:12345"}
+        400:
+         body:
+           application/json:
+             example: !include errorResponse-400.json
+        404:
+         body:
+           application/json:
+             example: !include errorResponse-404.json
+        500:
+         body:
+           application/json:
+             example: !include errorResponse-500.json 
+
+
+                 
