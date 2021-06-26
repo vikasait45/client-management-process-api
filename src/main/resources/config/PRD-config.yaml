@@ -1,8 +1,3 @@
-https:
-  port : "9031"
-  password : "![74qChRwe5du2zY32tTVtJg==]"
-
-
 file:
   location: "/Customers-PRD.csv"
   
@@ -10,4 +5,4 @@ folder:
   location: "/PRD"
   
 base:
-  path: "C:/Users/v2cloud/AnypointStudio/studio-workspace/client-management-process-api/src/main/resources"
+  path: "C:/gitProject/client-management-process-api/src/main/resources"
