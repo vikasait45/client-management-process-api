@@ -18,6 +18,131 @@
 			<munit-tools:assert-that doc:name="Assert that" doc:id="67892fc9-8604-4ce6-adc1-2904e4203976" expression="#[payload]" is="#[MunitTools::notNullValue()]" message="payload is null"/>
 		</munit:validation>
 	</munit:test>
-
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-400" doc:id="4c6f445a-c260-480e-8ab5-d061eb3e274b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="a4961c4a-0ca8-4ae8-a719-f01307af264f" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:BAD_REQUEST"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="b2894c94-4208-4b5b-a713-5d122ebcf3ed" message="Munit for APKIT flow for 400"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="e04444b4-8a23-4e8c-b556-f168758e8b00" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="dfb3b6f3-ee07-4ab1-b3e1-6436aaafa076" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="eacac070-73cf-43d7-ba3d-4ebe9c1d6255" actual="#[payload.errorCode]" expected="#[400]" message="errorCode is not 400"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-404" doc:id="5bb3f204-1460-4aad-8c7c-7a0495dd1c03" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="6ccaaac4-1cab-4eb0-bec5-5b45231ee546" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:NOT_FOUND"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="d76de681-ce10-4a54-b7be-ed5690f48b95" message="Munit for APKIT flow for 404"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="97205429-cd4b-4e0a-9e90-50b01c843a8b" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="b529d666-03db-4e45-8013-17c37228dd56" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6a31dd0e-3858-4371-a9d3-42a183d28e71" actual="#[payload.errorCode]" expected="#[404]" message="errorCode is not 404"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-405" doc:id="80c02403-84bc-4ef4-a9eb-ad260d7f903d" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="24a9a3d0-4812-4e32-a8de-9c7eaf285ded" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:METHOD_NOT_ALLOWED"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="05035abb-cc63-49f8-aab4-b6f106819ea7" message="Munit for APKIT flow for 405"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="be5e2e32-ad53-4ab9-979a-7c5e94397e4d" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="273fa3cd-d8e1-4d5d-8172-858db56089a0" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="e6b10fc7-1a4e-44bd-8efd-d4ac30d28d6e" actual="#[payload.errorCode]" expected="#[405]" message="errorCode is not 405"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-406" doc:id="d9859317-3bfd-453a-a5fd-abc00796dce1" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="e20300c2-3135-48e2-97e9-832c7704c08a" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:NOT_ACCEPTABLE"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="466bf983-9a5c-4f0e-9349-c9b689bfed34" message="Munit for APKIT flow for 406"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="c875e597-0e1c-48b7-9cdf-65e98dcb153b" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="1906fc0e-cb4c-4b86-89a2-f9a5eb170834" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3abaee51-d2fa-49c0-a70c-b2efcb0a5f7c" actual="#[payload.errorCode]" expected="#[406]" message="errorCode is not 406"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-415" doc:id="5c7b01e5-31bf-4a18-8fa1-18de27eb764c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="ce767328-462c-49dd-8b07-e4ac4cac93d9" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:UNSUPPORTED_MEDIA_TYPE"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="38c01a31-2f42-4ba2-877d-09fdd997b555" message="Munit for APKIT flow for 415"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="a46b0df1-232d-4da4-8b0a-2ecdd45728d8" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="4d3802f7-56db-486b-b3c1-56e53f1f51bc" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="0a7810f6-5753-4d13-91e1-ab020ff100d9" actual="#[payload.errorCode]" expected="#[415]" message="errorCode is not 415"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="client-management-process-api-test-suite-client-management-process-api-mainTest-501" doc:id="63347951-449d-4a84-8385-4973c7feb181" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock apikit router" doc:id="8695d3c7-eb8d-48e7-a411-c535c054e649" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="client-management-process-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId='#["APIKIT:NOT_IMPLEMENTED"]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<logger level="INFO" doc:name="Logger" doc:id="5b38389c-a50b-456e-9555-517a32b642ed" message="Munit for APKIT flow for 501"/>
+			<flow-ref doc:name="Flow-ref to client-management-process-api-main" doc:id="74599560-6d91-4ff0-8e37-2fa037eabdd4" name="client-management-process-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="41700771-c9d6-41c2-ba01-c8a357279b77" message="Munit Payload : #[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="13fd30df-d109-4529-820b-e98ce1f62b9f" actual="#[payload.errorCode]" expected="#[501]" message="errorCode is not 501"/>
+		</munit:validation>
+	</munit:test>
+	
 
 </mule>
